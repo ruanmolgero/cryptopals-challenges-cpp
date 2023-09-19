@@ -1,101 +1,16 @@
 #include <iostream>
-#include <string>
 #include <vector>
 #include <unordered_map>
 
-// Tradução de entradas hex para binário usando hash
-std::string hexToBinary(const std::string &hex)
-{
-    std::unordered_map<char, std::string> hexToBinMap{
-        {'0', "0000"},
-        {'1', "0001"},
-        {'2', "0010"},
-        {'3', "0011"},
-        {'4', "0100"},
-        {'5', "0101"},
-        {'6', "0110"},
-        {'7', "0111"},
-        {'8', "1000"},
-        {'9', "1001"},
-        {'a', "1010"},
-        {'b', "1011"},
-        {'c', "1100"},
-        {'d', "1101"},
-        {'e', "1110"},
-        {'f', "1111"},
-    };
-
-    std::string binary;
-    for (char c : hex)
-    {
-        if (hexToBinMap.find(tolower(c)) != hexToBinMap.end())
-        {
-            binary += hexToBinMap[tolower(c)];
-        }
-        else
-        {
-            // Assumindo que a entrada será apenas hexadecimal
-        }
-    }
-
-    return binary;
-}
-
-std::string binToBase64(const std::string &bin)
-{
-    // Vetor de caracteres usado para dar achar caractere base64 correspondente
-    // após transformar de binary para sexteto
-    const std::string base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-    std::string base64;
-    int index = 0;
-    int bitsRemaining = 0;
-
-    for (char c : bin)
-    {
-        // Conversão string para int
-        int bit = c - '0';
-
-        // Append bit ao valor de index
-        index = (index << 1) | bit;
-        bitsRemaining++;
-
-        // Ao completar 6 bits temos 1 valor equivalente em base64
-        if (bitsRemaining == 6)
-        {
-            base64 += base64Chars[index];
-            index = 0;
-            bitsRemaining = 0;
-        }
-    }
-
-    // Caso a quantidade de bits não seja multipla de 6 completamos o sexteto
-    // e adicionamos o padding
-    if (bitsRemaining > 0)
-    {
-        // Shift left a qtd de vezes necessárias pra completar um sexteto
-        index = index << (6 - bitsRemaining);
-        base64 += base64Chars[index];
-        // Adição do padding
-        while (bitsRemaining < 6)
-        {
-            base64 += '=';
-            bitsRemaining++;
-        }
-    }
-
-    return base64;
-}
-
 std::vector<uint8_t> hexToByteArray(const std::string &hex)
 {
-    std::vector<uint8_t> byteArray;
+    std::vector<uint8_t> byte_array;
 
     // Garantir que a string tem tamanho par
     if (hex.length() % 2 != 0)
     {
         std::cerr << "Erro: A string hex deve ter uma quantidade par de caracteres";
-        return byteArray;
+        return byte_array;
     }
 
     // Percorre hex em pares para obter 1 byte
@@ -105,7 +20,7 @@ std::vector<uint8_t> hexToByteArray(const std::string &hex)
         try
         {
             uint8_t byte = std::stoul(byteString, nullptr, 16);
-            byteArray.push_back(byte);
+            byte_array.push_back(byte);
         }
         catch (const std::invalid_argument &e)
         {
@@ -114,7 +29,7 @@ std::vector<uint8_t> hexToByteArray(const std::string &hex)
         }
     }
 
-    return byteArray;
+    return byte_array;
 }
 
 std::string byteArrayToBase64(const std::vector<uint8_t> &bytearray)
@@ -162,12 +77,44 @@ std::string byteArrayToBase64(const std::vector<uint8_t> &bytearray)
     return base64;
 }
 
+std::vector<u_int8_t> fixedXOR(const std::vector<uint8_t> &hex1, const std::vector<uint8_t> &hex2)
+{
+    std::vector<uint8_t> xor_array(hex1.size());
+    if (hex1.size() != hex2.size())
+    {
+        std::cerr << "Erro: Ambas entradas devem ter o mesmo tamanho";
+        return xor_array;
+    }
+
+    for (size_t i = 0; i < hex1.size(); i++)
+    {
+        xor_array[i] = hex1[i] ^ hex2[i];
+    }
+
+    return xor_array;
+}
+
 int main()
 {
-    std::string hex_value = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
-    std::vector<u_int8_t> bytearray_value = hexToByteArray(hex_value);
-    std::string base64_value = byteArrayToBase64(bytearray_value);
-    std::cout << base64_value << std::endl;
     // std::cout << "Hello, C++ on Linux!" << std::endl;
+
+    // set1:
+    // challenge 1
+    // std::string hex_value = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
+    // std::vector<u_int8_t> bytearray_value = hexToByteArray(hex_value);
+    // std::string base64_value = byteArrayToBase64(bytearray_value);
+    // std::cout << base64_value << std::endl;
+
+    // challenge 2
+    std::string str1 = "1c0111001f010100061a024b53535009181c";
+    std::vector<uint8_t> hex1 = hexToByteArray(str1);
+    std::string str2 = "686974207468652062756c6c277320657965";
+    std::vector<uint8_t> hex2 = hexToByteArray(str2);
+    std::vector<uint8_t> xor_h1_h2 = fixedXOR(hex1, hex2);
+    for (uint8_t byte : xor_h1_h2)
+    {
+        std::cout << std::hex << static_cast<int>(byte);
+    }
+    std::cout << std::endl;
     return 0;
 }
