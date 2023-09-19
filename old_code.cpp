@@ -89,19 +89,19 @@ std::string binToBase64(const std::string &bin)
 
 // old_challenge_s1.3
 
-std::vector<uint8_t> repeatableXOR(const std::vector<uint8_t> &byteArray, uint8_t singleChar)
-{
-    // Initialize the result array
-    std::vector<uint8_t> result(byteArray.size());
+// std::vector<uint8_t> repeatableXOR(const std::vector<uint8_t> &byteArray, uint8_t singleChar)
+// {
+//     // Initialize the result array
+//     std::vector<uint8_t> result(byteArray.size());
 
-    // Perform the XOR operation
-    for (size_t i = 0; i < byteArray.size(); ++i)
-    {
-        result[i] = singleChar ^ byteArray[i];
-    }
+//     // Perform the XOR operation
+//     for (size_t i = 0; i < byteArray.size(); ++i)
+//     {
+//         result[i] = singleChar ^ byteArray[i];
+//     }
 
-    return result;
-}
+//     return result;
+// }
 
 std::unordered_map<char, double> expected_frequency_texts = {
     {'e', 12.7},

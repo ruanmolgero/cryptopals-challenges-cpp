@@ -1,8 +1,10 @@
+#include "util.hpp"
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
 
-// se1
+// set1
 // challenge 1
 std::string hexToBinary(const std::string &hex)
 {
