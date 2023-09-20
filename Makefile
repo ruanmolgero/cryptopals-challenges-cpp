@@ -1,10 +1,17 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
-SRCS = main.cpp
-TARGET = myapp
+CXXFLAGS = -std=c++11 -Wall -Wextra -Iinclude
 
-$(TARGET): $(SRCS)
-    $(CXX) $(CXXFLAGS) -o $@ $^
+CHALLENGES = challenge_11 challenge_12 challenge_13
+SRCS = $(addsuffix .cpp, $(CHALLENGES))
+OBJS = $(SRCS:.cpp=.o)
+
+all: $(CHALLENGES)
+
+$(CHALLENGES): % : %.o util.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+%.o: %.cpp util.hpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-    rm -f $(TARGET)
+	rm -f $(OBJS) $(CHALLENGES)

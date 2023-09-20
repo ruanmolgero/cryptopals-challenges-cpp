@@ -94,8 +94,3 @@ std::string hex_to_binary(const std::string &hex)
     }
     return binary;
 }
-
-int main()
-{
-    return 0;
-}
