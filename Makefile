@@ -31,4 +31,3 @@ run: $(TARGET)
 # Clean up the generated files
 clean:
 	rm -f $(OBJS) $(TARGET)
-

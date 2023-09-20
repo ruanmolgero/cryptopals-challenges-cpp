@@ -211,13 +211,13 @@ std::vector<Candidate> findCandidates(const std::string &string)
     std::vector<Candidate> candidates;
 
     // Threshold para avaliar candidatos
-    int threshold = 10;
+    int threshold = 0;
     // Continua até achar apenas 1 candidato
     while (true)
     {
         candidates.clear();
 
-        for (int i = 65; i <= 122; i++)
+        for (int i = 0; i <= 255; i++)
         {
             // std::string evaluated = xor_thekey(i);
             std::string evaluated = xor_single_char(string, i);
@@ -250,7 +250,7 @@ std::vector<Candidate> findCandidates(const std::string &string)
 
         threshold++;
 
-        if (candidates.size() == 1)
+        if (candidates.size() == 1 || threshold > 40)
         {
             break;
         }
